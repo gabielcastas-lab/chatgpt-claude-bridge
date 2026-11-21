@@ -19,7 +19,7 @@ Configure no painel do serviço de hospedagem; nunca coloque valores reais no Gi
 | --- | --- | --- |
 | `ANTHROPIC_API_KEY` | Sim | Chave da Anthropic, guardada como Secret. |
 | `MCP_AUTH_TOKEN` | Sim | Token aleatório longo para proteger o endpoint MCP. |
-| `CLAUDE_MODEL` | Não | Modelo padrão. Padrão: `claude-sonnet-4-5`. |
+| `CLAUDE_MODEL` | Não | Modelo padrão. Padrão: `claude-sonnet-5`. |
 | `PORT` | Não | Porta HTTP, normalmente fornecida pela hospedagem. |
 
 ## Rodar localmente
