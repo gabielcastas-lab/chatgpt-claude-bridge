@@ -1,5 +1,5 @@
 import express from "express";
-import { timingSafeEqual, randomBytes } from "node:crypto";
+import { timingSafeEqual } from "node:crypto";
 import Anthropic from "@anthropic-ai/sdk";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -7,16 +7,17 @@ import { z } from "zod";
 
 const app = express();
 app.disable("x-powered-by");
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "1mb" }));
 
 const PORT = Number(process.env.PORT || 3000);
 const AUTH_TOKEN = process.env.MCP_AUTH_TOKEN;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-const DEFAULT_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-5";
+const DEFAULT_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5";
 const ALLOWED_MODELS = new Set([
   "claude-sonnet-4-5",
   "claude-haiku-4-5",
-  "claude-opus-4-5"
+  "claude-opus-5"
 ]);
 
 if (!AUTH_TOKEN || AUTH_TOKEN.length < 32) {
@@ -52,6 +53,9 @@ function authenticate(req, res, next) {
 
 function rateLimit(req, res, next) {
   const now = Date.now();
+  for (const [ip, entry] of requestCounts) {
+    if (now - entry.start >= WINDOW_MS) requestCounts.delete(ip);
+  }
   const key = req.ip || "unknown";
   const current = requestCounts.get(key);
   if (!current || now - current.start >= WINDOW_MS) {
