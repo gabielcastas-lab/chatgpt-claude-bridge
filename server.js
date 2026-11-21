@@ -15,7 +15,7 @@ const AUTH_TOKEN = process.env.MCP_AUTH_TOKEN;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const DEFAULT_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5";
 const ALLOWED_MODELS = new Set([
-  "claude-sonnet-4-5",
+  "claude-sonnet-5",
   "claude-haiku-4-5",
   "claude-opus-5"
 ]);
@@ -91,7 +91,7 @@ app.post("/mcp", authenticate, rateLimit, async (req, res) => {
       description: "Send a prompt to Claude through the Anthropic Messages API and return its answer.",
       inputSchema: {
         prompt: z.string().trim().min(1).max(20000).describe("The question or task for Claude."),
-        model: z.enum(["claude-sonnet-4-5", "claude-haiku-4-5", "claude-opus-4-5"]).optional().describe("Optional Claude model."),
+        model: z.enum(["claude-sonnet-5", "claude-haiku-4-5", "claude-opus-5"]).optional().describe("Optional Claude model."),
         max_tokens: z.number().int().min(1).max(4096).optional().describe("Maximum response tokens; defaults to 1200.")
       }
     },
